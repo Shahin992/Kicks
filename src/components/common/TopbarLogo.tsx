@@ -2,7 +2,7 @@ interface TopbarLogoProps {
   className?: string;
 }
 
-function TopbarLogo({ className }: TopbarLogoProps) {
+const TopbarLogo = ({ className }: TopbarLogoProps) => {
   return (
     <svg width="128" height="32" viewBox="0 0 128 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
       <g clipPath="url(#clip0_1042_138)">
@@ -19,6 +19,6 @@ function TopbarLogo({ className }: TopbarLogoProps) {
       </defs>
     </svg>
   );
-}
+};
 
 export default TopbarLogo;
