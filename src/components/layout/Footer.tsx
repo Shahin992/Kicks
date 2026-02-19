@@ -2,6 +2,8 @@ import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import TwitterIcon from '@mui/icons-material/Twitter';
+import BasicInput from '@/components/common/BasicInput';
+import { CustomButton } from '@/components/common/CustomButton';
 import FooterLogo from '@/components/common/FooterLogo';
 
 const Footer = () => {
@@ -21,17 +23,41 @@ const Footer = () => {
               <p className="text-[14px] font-medium text-[#e4eaff] sm:text-[16px] md:text-[18px]">Sign up for free! Join the community.</p>
 
               <form className="flex max-w-[510px] items-center gap-2 md:gap-1.5">
-                <input
-                  type="email"
+                <BasicInput
+                  fullWidth
                   placeholder="Email address"
-                  className="h-10 w-full rounded-[6px] border border-[#c4ceff] bg-transparent px-4 text-[14px] text-[#f5f5f5] placeholder:text-[#bcc6ff] outline-none sm:h-11 md:text-[14px]"
+                  sx={{
+                    backgroundColor: 'transparent !important',
+                    border: '1px solid #c4ceff !important',
+                    borderRadius: '6px',
+                    height: { xs: '40px', sm: '44px' },
+                    px: 1.5,
+                    '& input': {
+                      color: '#f5f5f5',
+                      fontSize: '14px',
+                      '&::placeholder': {
+                        color: '#bcc6ff',
+                        opacity: 1,
+                      },
+                    },
+                  }}
                 />
-                <button
+                <CustomButton
+                  variant="contained"
                   type="button"
-                  className="h-10 rounded-[7px] bg-[#232321] px-4 text-[11px] font-extrabold uppercase tracking-wide text-[#f5f5f5] sm:h-11 sm:text-[12px] md:px-4"
+                  customColor="#232321"
+                  sx={{
+                    height: { xs: '40px', sm: '44px' },
+                    borderRadius: '7px',
+                    px: 2,
+                    fontSize: { xs: '11px', sm: '12px' },
+                    fontWeight: 800,
+                    letterSpacing: '0.04em',
+                    textTransform: 'uppercase',
+                  }}
                 >
                   Submit
-                </button>
+                </CustomButton>
               </form>
             </div>
 

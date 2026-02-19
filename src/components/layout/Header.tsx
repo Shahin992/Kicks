@@ -2,6 +2,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { CustomIconButton } from '@/components/common/CustomIconButton';
 import TopbarLogo from '@/components/common/TopbarLogo';
 
 const Header = () => {
@@ -38,9 +39,9 @@ const Header = () => {
         </div>
 
         <div className="flex items-center justify-between md:hidden">
-          <button type="button" aria-label="Menu" className="text-[#232321]">
+          <CustomIconButton aria-label="Menu" customColor="#232321" sx={{ p: 0 }}>
             <MenuIcon sx={{ fontSize: 22 }} />
-          </button>
+          </CustomIconButton>
 
           <a href="/">
             <TopbarLogo className="h-[25px] w-auto" />
