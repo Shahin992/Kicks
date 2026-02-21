@@ -25,23 +25,23 @@ export const { useGetCategoriesQuery } = categoriesApi;
 export const useCategoriesQueryState = () => {
   const dispatch = useAppDispatch();
   const cachedCategories = useAppSelector((state) => state.categories.items);
-  const hasCache = cachedCategories.length > 0;
-  const query = useGetCategoriesQuery(undefined, { skip: hasCache });
+  const isListLoaded = useAppSelector((state) => state.categories.isListLoaded);
+  const query = useGetCategoriesQuery(undefined, { skip: isListLoaded });
 
   useEffect(() => {
-    if (query.data && query.data.length > 0) {
-      dispatch(setCategories(query.data));
+    if (query.isSuccess) {
+      dispatch(setCategories(query.data ?? []));
     }
-  }, [dispatch, query.data]);
+  }, [dispatch, query.data, query.isSuccess]);
 
-  const data = hasCache ? cachedCategories : (query.data ?? []);
+  const data = isListLoaded ? cachedCategories : (query.data ?? []);
 
   return {
     data,
-    isInitialLoading: !hasCache && query.isLoading,
-    isRefreshing: query.isFetching && hasCache,
-    isReady: hasCache || query.isSuccess,
-    hasError: !hasCache && query.isError,
+    isInitialLoading: !isListLoaded && query.isLoading,
+    isRefreshing: query.isFetching && isListLoaded,
+    isReady: isListLoaded || query.isSuccess,
+    hasError: !isListLoaded && query.isError,
     error: query.error,
     refetch: query.refetch,
   } as NormalizedQueryState<CategoryDto[]>;

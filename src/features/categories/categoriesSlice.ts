@@ -3,10 +3,12 @@ import type { CategoryDto } from '@/features/categories/categoryTypes';
 
 type CategoriesState = {
   items: CategoryDto[];
+  isListLoaded: boolean;
 };
 
 const initialState: CategoriesState = {
   items: [],
+  isListLoaded: false,
 };
 
 const categoriesSlice = createSlice({
@@ -15,6 +17,7 @@ const categoriesSlice = createSlice({
   reducers: {
     setCategories: (state, action: PayloadAction<CategoryDto[]>) => {
       state.items = action.payload;
+      state.isListLoaded = true;
     },
   },
 });
