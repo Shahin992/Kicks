@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch } from '@/app/hooks';
 import GlobalEmptyPage from '@/components/common/GlobalEmptyPage';
+import GlobalLoadingPage from '@/components/common/GlobalLoadingPage';
 import ProductsCarouselSection from '@/components/common/ProductsCarouselSection';
 import { CustomButton } from '@/components/common/CustomButton';
 import { addToCart } from '@/features/cart/cartSlice';
@@ -15,7 +16,7 @@ const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const productId = Number(id);
   const { data: product, isInitialLoading, hasError, error } = useProductQueryState(productId);
-  const { data: products, hasError: relatedHasError } = useProductsQueryState();
+  const { data: products, hasError: relatedHasError, isInitialLoading: isRelatedLoading } = useProductsQueryState();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState(38);
   const [selectedColor, setSelectedColor] = useState('#232321');
@@ -45,7 +46,11 @@ const ProductDetailPage = () => {
   }
 
   if (isInitialLoading) {
-    return <div className="h-[600px] animate-pulse rounded-[16px] bg-[#d4d4d4] py-8 md:h-[840px]" />;
+    return (
+      <div className="py-8 md:py-10">
+        <GlobalLoadingPage message="Loading product details..." />
+      </div>
+    );
   }
 
   const isNotFound = hasError && typeof error === 'object' && error !== null && 'status' in error && error.status === 404;
@@ -77,7 +82,6 @@ const ProductDetailPage = () => {
   const productImages = safeImages.length > 0 ? safeImages : [product.category?.image ?? ''];
   const relatedProducts = products.filter((item) => item.id !== product.id);
   const activeImage = productImages[Math.min(selectedImageIndex, productImages.length - 1)] ?? '';
-  const primaryImage = productImages[0] ?? '';
 
   return (
     <section className="space-y-10 py-4 md:space-y-14 md:py-8">
@@ -188,16 +192,7 @@ const ProductDetailPage = () => {
           <div className="flex gap-1.5">
             <CustomButton
               type="button"
-              onClick={() =>
-                dispatch(
-                  addToCart({
-                    id: product.id,
-                    title: product.title,
-                    price: product.price,
-                    image: primaryImage,
-                  }),
-                )
-              }
+              onClick={() => dispatch(addToCart(product))}
               variant="contained"
               customColor="#232321"
               sx={{
@@ -245,6 +240,7 @@ const ProductDetailPage = () => {
           image: item.images?.[0] ?? '',
           price: item.price,
         }))}
+        isLoading={isRelatedLoading}
         hasError={relatedHasError}
         errorMessage="Failed to load related products."
         emptyMessage="No related products available."

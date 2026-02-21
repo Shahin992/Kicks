@@ -1,6 +1,8 @@
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useEffect, useMemo, useState } from 'react';
+import GlobalEmptyPage from '@/components/common/GlobalEmptyPage';
+import GlobalLoadingPage from '@/components/common/GlobalLoadingPage';
 import ProductCard from '@/components/common/ProductCard';
 
 type CarouselProduct = {
@@ -13,6 +15,7 @@ type CarouselProduct = {
 interface ProductsCarouselSectionProps {
   title?: string;
   products: CarouselProduct[];
+  isLoading?: boolean;
   hasError?: boolean;
   errorMessage?: string;
   emptyMessage?: string;
@@ -21,6 +24,7 @@ interface ProductsCarouselSectionProps {
 const ProductsCarouselSection = ({
   title = 'You may also like',
   products,
+  isLoading = false,
   hasError = false,
   errorMessage = 'Failed to load related products.',
   emptyMessage = 'No related products available.',
@@ -104,13 +108,23 @@ const ProductsCarouselSection = ({
       </div>
 
       <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-4">
-        {hasError
+        {isLoading
           ? (
-            <div className="col-span-2 rounded-[12px] bg-[#d9d9d9] p-5 text-center text-[#232321] md:col-span-4">{errorMessage}</div>
+            <div className="col-span-2 md:col-span-4">
+              <GlobalLoadingPage message="Loading products..." />
+            </div>
+          )
+          : hasError
+          ? (
+            <div className="col-span-2 md:col-span-4">
+              <GlobalEmptyPage message={errorMessage} />
+            </div>
           )
           : products.length === 0
             ? (
-              <div className="col-span-2 rounded-[12px] bg-[#d9d9d9] p-5 text-center text-[#232321] md:col-span-4">{emptyMessage}</div>
+              <div className="col-span-2 md:col-span-4">
+                <GlobalEmptyPage message={emptyMessage} />
+              </div>
             )
             : visibleProducts.map((item) => (
               <ProductCard

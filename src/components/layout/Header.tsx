@@ -2,14 +2,15 @@ import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { useAppSelector } from '@/app/hooks';
+import { ROUTES } from '@/constants/routes';
 import { CustomIconButton } from '@/components/common/CustomIconButton';
 import TopbarLogo from '@/components/common/TopbarLogo';
 
 const Header = () => {
   const cartItems = useAppSelector((state) => state.cart.items);
-  const cartCount = useMemo(() => cartItems.reduce((sum, item) => sum + item.quantity, 0), [cartItems]);
+  const cartCount = cartItems.length;
 
   return (
     <header className="bg-[#cdcdcc] px-4 py-5 md:px-8 md:py-7">
@@ -37,9 +38,12 @@ const Header = () => {
           <div className="flex items-center gap-7 text-[#232321]">
             <SearchIcon sx={{ fontSize: 30 }} />
             <PersonIcon sx={{ fontSize: 30 }} />
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ffa52f] text-sm font-semibold text-[#232321]">
+            <Link
+              to={ROUTES.cart}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ffa52f] text-sm font-semibold text-[#232321]"
+            >
               {cartCount}
-            </div>
+            </Link>
           </div>
         </div>
 
@@ -54,9 +58,12 @@ const Header = () => {
 
           <div className="flex items-center gap-2 text-[#232321]">
             <PersonIcon sx={{ fontSize: 18 }} />
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#ffa52f] text-[12px] font-semibold leading-none">
+            <Link
+              to={ROUTES.cart}
+              className="flex h-6 w-6 items-center justify-center rounded-full bg-[#ffa52f] text-[12px] font-semibold leading-none"
+            >
               {cartCount}
-            </div>
+            </Link>
           </div>
         </div>
       </div>

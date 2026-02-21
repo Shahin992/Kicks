@@ -2,6 +2,8 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import { useEffect, useMemo, useState } from 'react';
+import GlobalEmptyPage from '@/components/common/GlobalEmptyPage';
+import GlobalLoadingPage from '@/components/common/GlobalLoadingPage';
 import { useCategoriesQueryState } from '@/features/categories/categoriesApi';
 
 const CATEGORY_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=1200&q=80';
@@ -89,22 +91,21 @@ const CategoriesSection = () => {
 
       <div className="grid grid-cols-1 border border-[#2f2f2f] md:grid-cols-2 md:border-x-0 md:border-b-0 md:border-t md:pl-14">
         {isInitialLoading
-          ? Array.from({ length: visibleCount }, (_, index) => (
-              <article
-                key={index}
-                className="relative min-h-[300px] animate-pulse bg-[#d4d6d9] p-4 md:min-h-[600px] md:p-10"
-              />
-            ))
+          ? (
+            <article className="col-span-1 md:col-span-2">
+              <GlobalLoadingPage message="Loading categories..." />
+            </article>
+          )
           : hasError
             ? (
-              <article className="col-span-1 rounded-[16px] bg-[#d4d6d9] p-6 text-center text-[#232321] md:col-span-2">
-                Failed to load categories.
+              <article className="col-span-1 md:col-span-2">
+                <GlobalEmptyPage message="Failed to load categories." />
               </article>
             )
             : !isInitialLoading && visibleCategories.length === 0
               ? (
-                <article className="col-span-1 rounded-[16px] bg-[#d4d6d9] p-6 text-center text-[#232321] md:col-span-2">
-                  No categories available.
+                <article className="col-span-1 md:col-span-2">
+                  <GlobalEmptyPage message="No categories available." />
                 </article>
               )
               : visibleCategories.map((category, index) => (

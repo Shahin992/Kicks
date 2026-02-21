@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import { CustomButton } from '@/components/common/CustomButton';
+import GlobalEmptyPage from '@/components/common/GlobalEmptyPage';
+import GlobalLoadingPage from '@/components/common/GlobalLoadingPage';
 import ProductCard from '@/components/common/ProductCard';
 import { ROUTES } from '@/constants/routes';
 import { useProductsQueryState } from '@/features/products/productsApi';
@@ -41,19 +43,21 @@ const ProductsSection = () => {
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-5">
         {isInitialLoading
-          ? Array.from({ length: 4 }, (_, index) => (
-              <div key={index} className="h-[250px] animate-pulse rounded-[16px] bg-[#d8d9dd] md:h-[430px]" />
-            ))
+          ? (
+            <div className="col-span-2 md:col-span-4">
+              <GlobalLoadingPage message="Loading products..." />
+            </div>
+          )
           : hasError
             ? (
-              <div className="col-span-2 rounded-[16px] bg-[#e1e1e1] p-6 text-center text-[#232321] md:col-span-4">
-                Failed to load products.
+              <div className="col-span-2 md:col-span-4">
+                <GlobalEmptyPage message="Failed to load products." />
               </div>
             )
             : visibleProducts.length === 0
               ? (
-                <div className="col-span-2 rounded-[16px] bg-[#e1e1e1] p-6 text-center text-[#232321] md:col-span-4">
-                  No products available.
+                <div className="col-span-2 md:col-span-4">
+                  <GlobalEmptyPage message="No products available." />
                 </div>
               )
               : visibleProducts.map((product) => (
