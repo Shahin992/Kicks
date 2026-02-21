@@ -6,13 +6,15 @@ import { useParams } from 'react-router-dom';
 import GlobalEmptyPage from '@/components/common/GlobalEmptyPage';
 import ProductCard from '@/components/common/ProductCard';
 import { CustomButton } from '@/components/common/CustomButton';
-import { products } from '@/constants/products';
+import { useProductQueryState, useProductsQueryState } from '@/features/products/productsApi';
 
 const AVAILABLE_SIZES = [38, 39, 40, 41, 42, 43, 44, 45, 46];
 
 const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const product = useMemo(() => products.find((item) => item.id === Number(id)), [id]);
+  const productId = Number(id);
+  const { data: product, isInitialLoading, hasError } = useProductQueryState(productId);
+  const { data: products, hasError: relatedHasError } = useProductsQueryState();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState(38);
   const [selectedColor, setSelectedColor] = useState('#232321');
@@ -24,9 +26,16 @@ const ProductDetailPage = () => {
     setSelectedImageIndex(0);
     setSelectedSize(38);
     setSelectedColor('#232321');
+  }, [product?.id]);
+
+  const safeImages = useMemo(() => {
+    if (!product) {
+      return [];
+    }
+    return (product.images ?? []).filter(Boolean);
   }, [product]);
 
-  if (!product) {
+  if (!Number.isFinite(productId)) {
     return (
       <div className="py-8 md:py-10">
         <GlobalEmptyPage message="Product not found." />
@@ -34,7 +43,21 @@ const ProductDetailPage = () => {
     );
   }
 
+  if (isInitialLoading) {
+    return <div className="h-[600px] animate-pulse rounded-[16px] bg-[#d4d4d4] py-8 md:h-[840px]" />;
+  }
+
+  if (hasError || !product) {
+    return (
+      <div className="py-8 md:py-10">
+        <GlobalEmptyPage message="Unable to load product details." />
+      </div>
+    );
+  }
+
+  const productImages = safeImages.length > 0 ? safeImages : [product.category?.image ?? ''];
   const relatedProducts = products.filter((item) => item.id !== product.id).slice(0, 4);
+  const activeImage = productImages[Math.min(selectedImageIndex, productImages.length - 1)] ?? '';
 
   return (
     <section className="space-y-10 py-4 md:space-y-14 md:py-8">
@@ -42,14 +65,14 @@ const ProductDetailPage = () => {
         <div className="space-y-2.5 md:space-y-0">
           <div className="overflow-hidden rounded-[10px] bg-[#e7e7e6] p-2 md:hidden">
             <img
-              src={product.images[selectedImageIndex]}
+              src={activeImage}
               alt={product.title}
               className="h-[180px] w-full rounded-[8px] object-contain"
             />
           </div>
 
           <div className="flex justify-center gap-1.5 md:hidden">
-            {product.images.map((_, index) => (
+            {productImages.map((_, index) => (
               <button
                 key={index}
                 type="button"
@@ -61,7 +84,7 @@ const ProductDetailPage = () => {
           </div>
 
           <div className="grid grid-cols-4 gap-1.5 md:hidden">
-            {product.images.map((image, index) => (
+            {productImages.map((image, index) => (
               <button
                 key={image}
                 type="button"
@@ -76,23 +99,23 @@ const ProductDetailPage = () => {
 
           <div className="hidden gap-1 md:grid md:grid-cols-2">
             <div className="overflow-hidden bg-[#e7e7e6] p-2">
-              <img src={product.images[0]} alt={`${product.title} side`} className="h-[320px] w-full object-contain" />
+              <img src={productImages[0] ?? activeImage} alt={`${product.title} side`} className="h-[320px] w-full object-contain" />
             </div>
             <div className="overflow-hidden bg-[#e7e7e6] p-2">
-              <img src={product.images[1]} alt={`${product.title} top`} className="h-[320px] w-full object-contain" />
+              <img src={productImages[1] ?? activeImage} alt={`${product.title} top`} className="h-[320px] w-full object-contain" />
             </div>
             <div className="overflow-hidden bg-[#e7e7e6] p-2">
-              <img src={product.images[2]} alt={`${product.title} detail`} className="h-[320px] w-full object-cover" />
+              <img src={productImages[2] ?? activeImage} alt={`${product.title} detail`} className="h-[320px] w-full object-cover" />
             </div>
             <div className="overflow-hidden bg-[#e7e7e6] p-2">
-              <img src={product.images[3]} alt={`${product.title} sole`} className="h-[320px] w-full object-cover" />
+              <img src={productImages[3] ?? activeImage} alt={`${product.title} sole`} className="h-[320px] w-full object-cover" />
             </div>
           </div>
         </div>
 
         <div className="space-y-3.5 rounded-[10px] bg-[#cdcdcc] p-2.5 md:space-y-4 md:bg-transparent md:p-0">
           <span className="inline-flex rounded-full bg-[#4A69E2] px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.03em] text-white md:rounded-[20px] md:px-3 md:text-[10px]">
-            {product.badge}
+            {product.category?.name ?? 'New release'}
           </span>
 
           <div className="space-y-1">
@@ -176,9 +199,8 @@ const ProductDetailPage = () => {
             </div>
             <p className="text-[8px] leading-[1.45] text-[#70706e] md:text-[12px]">{product.description}</p>
             <ul className="list-disc space-y-1 pl-4 text-[8px] leading-[1.45] text-[#70706e] md:text-[12px]">
-              {product.features.map((feature) => (
-                <li key={feature}>{feature}</li>
-              ))}
+              <li>Pay over time in interest-free installments.</li>
+              <li>Standard shipping includes tracking and insurance.</li>
             </ul>
           </div>
         </div>
@@ -211,17 +233,27 @@ const ProductDetailPage = () => {
         </div>
 
         <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-4">
-          {relatedProducts.map((item) => (
-            <ProductCard
-              key={item.id}
-              id={item.id}
-              title={item.title}
-              image={item.images[0]}
-              badge={item.badge}
-              badgeColor={item.badgeColor}
-              price={item.price}
-            />
-          ))}
+          {relatedHasError
+            ? (
+              <div className="col-span-2 rounded-[12px] bg-[#d9d9d9] p-5 text-center text-[#232321] md:col-span-4">
+                Failed to load related products.
+              </div>
+            )
+            : relatedProducts.length === 0
+              ? (
+                <div className="col-span-2 rounded-[12px] bg-[#d9d9d9] p-5 text-center text-[#232321] md:col-span-4">
+                  No related products available.
+                </div>
+              )
+              : relatedProducts.map((item) => (
+                <ProductCard
+                  key={item.id}
+                  id={item.id}
+                  title={item.title}
+                  image={item.images?.[0] ?? ''}
+                  price={item.price}
+                />
+              ))}
         </div>
       </div>
     </section>

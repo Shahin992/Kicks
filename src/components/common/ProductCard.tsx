@@ -15,7 +15,7 @@ const ProductCard = ({ id, title, image, badge = 'New', badgeColor = '#4A69E2', 
   const detailPath = generatePath(ROUTES.productDetail, { id: String(id) });
 
   return (
-    <article className="w-full space-y-2 md:space-y-3">
+    <article className="flex h-full w-full flex-col gap-2 md:gap-3">
       <Link
         to={detailPath}
         className="block"
@@ -30,7 +30,7 @@ const ProductCard = ({ id, title, image, badge = 'New', badgeColor = '#4A69E2', 
           </span>
 
           <div className="flex h-full w-full items-center justify-center">
-            <img src={image} alt={title} className="h-full w-full rounded-[14px] object-contain" />
+            <img src={image} alt={title} className="h-full w-full rounded-[14px] object-cover" />
           </div>
         </div>
       </Link>
@@ -40,7 +40,7 @@ const ProductCard = ({ id, title, image, badge = 'New', badgeColor = '#4A69E2', 
         className="block"
       >
         <h3
-          className="text-[16px] font-semibold uppercase leading-[1] tracking-normal text-[#232321] md:text-[24px] md:leading-[1]"
+          className="h-[32px] overflow-hidden text-[16px] font-semibold uppercase leading-[1] tracking-normal text-[#232321] md:h-[48px] md:text-[24px] md:leading-[1]"
           style={{ fontFamily: 'Rubik, sans-serif' }}
         >
           {title}
