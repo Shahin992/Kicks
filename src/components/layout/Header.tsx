@@ -2,10 +2,15 @@ import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useMemo } from 'react';
+import { useAppSelector } from '@/app/hooks';
 import { CustomIconButton } from '@/components/common/CustomIconButton';
 import TopbarLogo from '@/components/common/TopbarLogo';
 
 const Header = () => {
+  const cartItems = useAppSelector((state) => state.cart.items);
+  const cartCount = useMemo(() => cartItems.reduce((sum, item) => sum + item.quantity, 0), [cartItems]);
+
   return (
     <header className="bg-[#cdcdcc] px-4 py-5 md:px-8 md:py-7">
       <div className="mx-auto w-full max-w-[1220px] rounded-[18px] bg-[#f3f3f3] px-4 py-3 md:rounded-[24px] md:px-7 md:py-5">
@@ -33,7 +38,7 @@ const Header = () => {
             <SearchIcon sx={{ fontSize: 30 }} />
             <PersonIcon sx={{ fontSize: 30 }} />
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ffa52f] text-sm font-semibold text-[#232321]">
-              0
+              {cartCount}
             </div>
           </div>
         </div>
@@ -50,7 +55,7 @@ const Header = () => {
           <div className="flex items-center gap-2 text-[#232321]">
             <PersonIcon sx={{ fontSize: 18 }} />
             <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#ffa52f] text-[12px] font-semibold leading-none">
-              0
+              {cartCount}
             </div>
           </div>
         </div>

@@ -29,23 +29,23 @@ export const { useGetProductsQuery, useGetProductByIdQuery } = productsApi;
 export const useProductsQueryState = () => {
   const dispatch = useAppDispatch();
   const cachedProducts = useAppSelector((state) => state.products.items);
-  const hasCache = cachedProducts.length > 0;
-  const query = useGetProductsQuery(undefined, { skip: hasCache });
+  const isListLoaded = useAppSelector((state) => state.products.isListLoaded);
+  const query = useGetProductsQuery(undefined, { skip: isListLoaded });
 
   useEffect(() => {
-    if (query.data && query.data.length > 0) {
-      dispatch(setProducts(query.data));
+    if (query.isSuccess) {
+      dispatch(setProducts(query.data ?? []));
     }
-  }, [dispatch, query.data]);
+  }, [dispatch, query.data, query.isSuccess]);
 
-  const data = hasCache ? cachedProducts : (query.data ?? []);
+  const data = isListLoaded ? cachedProducts : (query.data ?? []);
 
   return {
     data,
-    isInitialLoading: !hasCache && query.isLoading,
-    isRefreshing: query.isFetching && hasCache,
-    isReady: hasCache || query.isSuccess,
-    hasError: !hasCache && query.isError,
+    isInitialLoading: !isListLoaded && query.isLoading,
+    isRefreshing: query.isFetching && isListLoaded,
+    isReady: isListLoaded || query.isSuccess,
+    hasError: !isListLoaded && query.isError,
     error: query.error,
     refetch: query.refetch,
   } as NormalizedQueryState<ProductDto[]>;
@@ -54,8 +54,7 @@ export const useProductsQueryState = () => {
 export const useProductQueryState = (productId: number) => {
   const dispatch = useAppDispatch();
   const cachedProduct = useAppSelector((state) => state.products.items.find((item) => item.id === productId)) ?? null;
-  const hasCache = Boolean(cachedProduct);
-  const shouldSkip = !Number.isFinite(productId) || productId <= 0 || hasCache;
+  const shouldSkip = !Number.isFinite(productId) || productId <= 0;
   const query = useGetProductByIdQuery(productId, { skip: shouldSkip });
 
   useEffect(() => {
@@ -65,13 +64,14 @@ export const useProductQueryState = (productId: number) => {
   }, [dispatch, query.data]);
 
   const data = cachedProduct ?? query.data ?? null;
+  const hasData = Boolean(data);
 
   return {
     data,
-    isInitialLoading: !hasCache && query.isLoading,
-    isRefreshing: query.isFetching && hasCache,
-    isReady: hasCache || query.isSuccess,
-    hasError: !hasCache && query.isError,
+    isInitialLoading: !hasData && query.isLoading,
+    isRefreshing: query.isFetching && hasData,
+    isReady: hasData || query.isSuccess,
+    hasError: !hasData && query.isError,
     error: query.error,
     refetch: query.refetch,
   } as NormalizedQueryState<ProductDto | null>;

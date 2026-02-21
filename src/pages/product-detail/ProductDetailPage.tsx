@@ -1,19 +1,20 @@
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useAppDispatch } from '@/app/hooks';
 import GlobalEmptyPage from '@/components/common/GlobalEmptyPage';
-import ProductCard from '@/components/common/ProductCard';
+import ProductsCarouselSection from '@/components/common/ProductsCarouselSection';
 import { CustomButton } from '@/components/common/CustomButton';
+import { addToCart } from '@/features/cart/cartSlice';
 import { useProductQueryState, useProductsQueryState } from '@/features/products/productsApi';
 
 const AVAILABLE_SIZES = [38, 39, 40, 41, 42, 43, 44, 45, 46];
 
 const ProductDetailPage = () => {
+  const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
   const productId = Number(id);
-  const { data: product, isInitialLoading, hasError } = useProductQueryState(productId);
+  const { data: product, isInitialLoading, hasError, error } = useProductQueryState(productId);
   const { data: products, hasError: relatedHasError } = useProductsQueryState();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState(38);
@@ -47,7 +48,17 @@ const ProductDetailPage = () => {
     return <div className="h-[600px] animate-pulse rounded-[16px] bg-[#d4d4d4] py-8 md:h-[840px]" />;
   }
 
-  if (hasError || !product) {
+  const isNotFound = hasError && typeof error === 'object' && error !== null && 'status' in error && error.status === 404;
+
+  if (isNotFound) {
+    return (
+      <div className="py-8 md:py-10">
+        <GlobalEmptyPage message="No product found for this ID." />
+      </div>
+    );
+  }
+
+  if (hasError) {
     return (
       <div className="py-8 md:py-10">
         <GlobalEmptyPage message="Unable to load product details." />
@@ -55,19 +66,28 @@ const ProductDetailPage = () => {
     );
   }
 
+  if (!product) {
+    return (
+      <div className="py-8 md:py-10">
+        <GlobalEmptyPage message="No product found for this ID." />
+      </div>
+    );
+  }
+
   const productImages = safeImages.length > 0 ? safeImages : [product.category?.image ?? ''];
-  const relatedProducts = products.filter((item) => item.id !== product.id).slice(0, 4);
+  const relatedProducts = products.filter((item) => item.id !== product.id);
   const activeImage = productImages[Math.min(selectedImageIndex, productImages.length - 1)] ?? '';
+  const primaryImage = productImages[0] ?? '';
 
   return (
     <section className="space-y-10 py-4 md:space-y-14 md:py-8">
       <div className="grid gap-4 md:grid-cols-[1.3fr_0.9fr] md:gap-5">
         <div className="space-y-2.5 md:space-y-0">
-          <div className="overflow-hidden rounded-[10px] bg-[#e7e7e6] p-2 md:hidden">
+          <div className="overflow-hidden rounded-[10px] bg-[#e7e7e6] md:hidden">
             <img
               src={activeImage}
               alt={product.title}
-              className="h-[180px] w-full rounded-[8px] object-contain"
+              className="h-[220px] w-full object-cover"
             />
           </div>
 
@@ -92,7 +112,7 @@ const ProductDetailPage = () => {
                 className={`overflow-hidden rounded-[8px] border p-0.5 ${selectedImageIndex === index ? 'border-[#4A69E2]' : 'border-transparent'}`}
                 aria-label={`Select thumbnail ${index + 1}`}
               >
-                <img src={image} alt={`${product.title} thumbnail ${index + 1}`} className="h-[42px] w-full rounded-[6px] bg-[#dfdedd] object-contain" />
+                <img src={image} alt={`${product.title} thumbnail ${index + 1}`} className="h-[42px] w-full rounded-[6px] bg-[#dfdedd] object-cover" />
               </button>
             ))}
           </div>
@@ -167,6 +187,17 @@ const ProductDetailPage = () => {
 
           <div className="flex gap-1.5">
             <CustomButton
+              type="button"
+              onClick={() =>
+                dispatch(
+                  addToCart({
+                    id: product.id,
+                    title: product.title,
+                    price: product.price,
+                    image: primaryImage,
+                  }),
+                )
+              }
               variant="contained"
               customColor="#232321"
               sx={{
@@ -206,56 +237,18 @@ const ProductDetailPage = () => {
         </div>
       </div>
 
-      <div className="space-y-3 md:space-y-5">
-        <div className="flex items-center justify-between">
-          <h2
-            className="text-[26px] font-semibold leading-none text-[#232321] md:text-[42px]"
-            style={{ fontFamily: 'Rubik, sans-serif' }}
-          >
-            You may also like
-          </h2>
-          <div className="flex items-center gap-1.5">
-            <button
-              type="button"
-              className="flex h-4 w-4 items-center justify-center rounded-[4px] bg-[#d4d4d3] text-[#232321] md:h-7 md:w-7"
-              aria-label="Previous products"
-            >
-              <KeyboardArrowLeftIcon sx={{ fontSize: { xs: 10, md: 20 } }} />
-            </button>
-            <button
-              type="button"
-              className="flex h-4 w-4 items-center justify-center rounded-[4px] bg-[#232321] text-white md:h-7 md:w-7"
-              aria-label="Next products"
-            >
-              <KeyboardArrowRightIcon sx={{ fontSize: { xs: 10, md: 20 } }} />
-            </button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-4">
-          {relatedHasError
-            ? (
-              <div className="col-span-2 rounded-[12px] bg-[#d9d9d9] p-5 text-center text-[#232321] md:col-span-4">
-                Failed to load related products.
-              </div>
-            )
-            : relatedProducts.length === 0
-              ? (
-                <div className="col-span-2 rounded-[12px] bg-[#d9d9d9] p-5 text-center text-[#232321] md:col-span-4">
-                  No related products available.
-                </div>
-              )
-              : relatedProducts.map((item) => (
-                <ProductCard
-                  key={item.id}
-                  id={item.id}
-                  title={item.title}
-                  image={item.images?.[0] ?? ''}
-                  price={item.price}
-                />
-              ))}
-        </div>
-      </div>
+      <ProductsCarouselSection
+        title="You may also like"
+        products={relatedProducts.map((item) => ({
+          id: item.id,
+          title: item.title,
+          image: item.images?.[0] ?? '',
+          price: item.price,
+        }))}
+        hasError={relatedHasError}
+        errorMessage="Failed to load related products."
+        emptyMessage="No related products available."
+      />
     </section>
   );
 };
