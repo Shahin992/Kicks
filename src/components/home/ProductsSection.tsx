@@ -9,6 +9,7 @@ import { useProductsQueryState } from '@/features/products/productsApi';
 const ProductsSection = () => {
   const { data: products, isInitialLoading, hasError } = useProductsQueryState();
   const visibleProducts = products.slice(0, 4);
+  const isEmpty = !isInitialLoading && !hasError && visibleProducts.length === 0;
 
   return (
     <section className="space-y-5 py-6 md:space-y-8 md:py-10">
@@ -54,7 +55,7 @@ const ProductsSection = () => {
                 <GlobalEmptyPage message="Failed to load products." />
               </div>
             )
-            : visibleProducts.length === 0
+            : isEmpty
               ? (
                 <div className="col-span-2 md:col-span-4">
                   <GlobalEmptyPage message="No products available." />

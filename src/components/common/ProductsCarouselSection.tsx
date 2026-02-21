@@ -35,6 +35,7 @@ const ProductsCarouselSection = ({
   const maxStartIndex = Math.max(0, products.length - pageSize);
   const canGoPrev = startIndex > 0;
   const canGoNext = startIndex < maxStartIndex;
+  const isEmpty = !isLoading && !hasError && products.length === 0;
 
   useEffect(() => {
     const handleResize = () => {
@@ -120,7 +121,7 @@ const ProductsCarouselSection = ({
               <GlobalEmptyPage message={errorMessage} />
             </div>
           )
-          : products.length === 0
+          : isEmpty
             ? (
               <div className="col-span-2 md:col-span-4">
                 <GlobalEmptyPage message={emptyMessage} />

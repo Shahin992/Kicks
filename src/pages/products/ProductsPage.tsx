@@ -5,6 +5,7 @@ import { useProductsQueryState } from '@/features/products/productsApi';
 
 const ProductsPage = () => {
   const { data: products, isInitialLoading, hasError } = useProductsQueryState();
+  const isEmpty = !isInitialLoading && !hasError && products.length === 0;
 
   return (
     <section className="space-y-6 py-8 md:space-y-8 md:py-12">
@@ -12,8 +13,7 @@ const ProductsPage = () => {
         className="text-[32px] font-semibold uppercase leading-[1] text-[#232321] md:text-[74px] md:leading-[0.95]"
         style={{ fontFamily: 'Rubik, sans-serif' }}
       >
-        <span className="block">All New</span>
-        <span className="block">Drops</span>
+        <span className="block">All New Drops</span>
       </h1>
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-5">
@@ -29,7 +29,7 @@ const ProductsPage = () => {
                 <GlobalEmptyPage message="Failed to load products." />
               </div>
             )
-            : products.length === 0
+            : isEmpty
               ? (
                 <div className="col-span-2 md:col-span-4">
                   <GlobalEmptyPage message="No products available." />

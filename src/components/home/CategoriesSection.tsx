@@ -38,6 +38,7 @@ const CategoriesSection = () => {
   const visibleCategories = useMemo(() => {
     return categories.slice(startIndex, startIndex + visibleCount);
   }, [categories, startIndex, visibleCount]);
+  const isEmpty = !isInitialLoading && !hasError && visibleCategories.length === 0;
 
   const handlePrevious = () => {
     if (!canGoPrev) {
@@ -102,7 +103,7 @@ const CategoriesSection = () => {
                 <GlobalEmptyPage message="Failed to load categories." />
               </article>
             )
-            : !isInitialLoading && visibleCategories.length === 0
+            : isEmpty
               ? (
                 <article className="col-span-1 md:col-span-2">
                   <GlobalEmptyPage message="No categories available." />
