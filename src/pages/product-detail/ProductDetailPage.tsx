@@ -1,5 +1,231 @@
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import GlobalEmptyPage from '@/components/common/GlobalEmptyPage';
+import ProductCard from '@/components/common/ProductCard';
+import { CustomButton } from '@/components/common/CustomButton';
+import { products } from '@/constants/products';
+
+const AVAILABLE_SIZES = [38, 39, 40, 41, 42, 43, 44, 45, 46];
+
 const ProductDetailPage = () => {
-  return <div className="py-8" />;
+  const { id } = useParams<{ id: string }>();
+  const product = useMemo(() => products.find((item) => item.id === Number(id)), [id]);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [selectedSize, setSelectedSize] = useState(38);
+  const [selectedColor, setSelectedColor] = useState('#232321');
+
+  useEffect(() => {
+    if (!product) {
+      return;
+    }
+    setSelectedImageIndex(0);
+    setSelectedSize(38);
+    setSelectedColor('#232321');
+  }, [product]);
+
+  if (!product) {
+    return (
+      <div className="py-8 md:py-10">
+        <GlobalEmptyPage message="Product not found." />
+      </div>
+    );
+  }
+
+  const relatedProducts = products.filter((item) => item.id !== product.id).slice(0, 4);
+
+  return (
+    <section className="space-y-10 py-4 md:space-y-14 md:py-8">
+      <div className="grid gap-4 md:grid-cols-[1.3fr_0.9fr] md:gap-5">
+        <div className="space-y-2.5 md:space-y-0">
+          <div className="overflow-hidden rounded-[10px] bg-[#e7e7e6] p-2 md:hidden">
+            <img
+              src={product.images[selectedImageIndex]}
+              alt={product.title}
+              className="h-[180px] w-full rounded-[8px] object-contain"
+            />
+          </div>
+
+          <div className="flex justify-center gap-1.5 md:hidden">
+            {product.images.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => setSelectedImageIndex(index)}
+                className={`h-1.5 rounded-full transition-all ${selectedImageIndex === index ? 'w-4 bg-[#4A69E2]' : 'w-2 bg-[#b9b9b8]'}`}
+                aria-label={`Show image ${index + 1}`}
+              />
+            ))}
+          </div>
+
+          <div className="grid grid-cols-4 gap-1.5 md:hidden">
+            {product.images.map((image, index) => (
+              <button
+                key={image}
+                type="button"
+                onClick={() => setSelectedImageIndex(index)}
+                className={`overflow-hidden rounded-[8px] border p-0.5 ${selectedImageIndex === index ? 'border-[#4A69E2]' : 'border-transparent'}`}
+                aria-label={`Select thumbnail ${index + 1}`}
+              >
+                <img src={image} alt={`${product.title} thumbnail ${index + 1}`} className="h-[42px] w-full rounded-[6px] bg-[#dfdedd] object-contain" />
+              </button>
+            ))}
+          </div>
+
+          <div className="hidden gap-1 md:grid md:grid-cols-2">
+            <div className="overflow-hidden bg-[#e7e7e6] p-2">
+              <img src={product.images[0]} alt={`${product.title} side`} className="h-[320px] w-full object-contain" />
+            </div>
+            <div className="overflow-hidden bg-[#e7e7e6] p-2">
+              <img src={product.images[1]} alt={`${product.title} top`} className="h-[320px] w-full object-contain" />
+            </div>
+            <div className="overflow-hidden bg-[#e7e7e6] p-2">
+              <img src={product.images[2]} alt={`${product.title} detail`} className="h-[320px] w-full object-cover" />
+            </div>
+            <div className="overflow-hidden bg-[#e7e7e6] p-2">
+              <img src={product.images[3]} alt={`${product.title} sole`} className="h-[320px] w-full object-cover" />
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-3.5 rounded-[10px] bg-[#cdcdcc] p-2.5 md:space-y-4 md:bg-transparent md:p-0">
+          <span className="inline-flex rounded-full bg-[#4A69E2] px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.03em] text-white md:rounded-[20px] md:px-3 md:text-[10px]">
+            {product.badge}
+          </span>
+
+          <div className="space-y-1">
+            <h1
+              className="max-w-[450px] text-[18px] font-semibold uppercase leading-[1.05] text-[#232321] md:text-[40px]"
+              style={{ fontFamily: 'Rubik, sans-serif' }}
+            >
+              {product.title}
+            </h1>
+            <p className="text-[22px] font-semibold leading-none text-[#4A69E2] md:text-[32px]">${product.price}.00</p>
+          </div>
+
+          <div className="space-y-1.5">
+            <p className="text-[8px] font-semibold uppercase text-[#232321]/70 md:text-[11px]">Color</p>
+            <div className="flex gap-2">
+              {['#232321', '#9dac97'].map((color) => (
+                <button
+                  key={color}
+                  type="button"
+                  onClick={() => setSelectedColor(color)}
+                  className={`h-5 w-5 rounded-full border-2 ${selectedColor === color ? 'border-[#232321]' : 'border-transparent'} md:h-6 md:w-6`}
+                  style={{ backgroundColor: color }}
+                  aria-label={`Choose ${color} color`}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <p className="text-[8px] font-semibold uppercase text-[#232321]/70 md:text-[11px]">Size</p>
+              <button type="button" className="text-[8px] font-semibold uppercase text-[#232321]/70 md:text-[11px]">
+                Size chart
+              </button>
+            </div>
+            <div className="grid grid-cols-7 gap-1.5 md:grid-cols-6">
+              {AVAILABLE_SIZES.map((size) => (
+                <button
+                  key={size}
+                  type="button"
+                  onClick={() => setSelectedSize(size)}
+                  className={`rounded-[6px] border py-1 text-[8px] font-semibold md:py-2 md:text-[10px] ${selectedSize === size ? 'border-[#232321] bg-[#232321] text-[#f5f5f5]' : 'border-[#d8d8d8] bg-[#f4f4f4] text-[#232321]'}`}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex gap-1.5">
+            <CustomButton
+              variant="contained"
+              customColor="#232321"
+              sx={{
+                flex: 1,
+                height: { xs: '24px', md: '40px' },
+                borderRadius: '6px',
+                fontSize: { xs: '8px', md: '11px' },
+                fontWeight: 700,
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
+              }}
+            >
+              Add to Cart
+            </CustomButton>
+            <button
+              type="button"
+              aria-label="Add to wishlist"
+              className="flex h-[24px] w-[24px] items-center justify-center rounded-[6px] bg-[#232321] text-white md:h-[40px] md:w-[40px]"
+            >
+              <FavoriteBorderOutlinedIcon sx={{ fontSize: { xs: 12, md: 18 } }} />
+            </button>
+          </div>
+
+          <div className="space-y-1.5 border-t border-[#bababa] pt-2 md:pt-3">
+            <div className="flex items-center justify-between">
+              <h2 className="text-[9px] font-semibold uppercase text-[#232321] md:text-[12px]">About the product</h2>
+              <button type="button" className="text-[8px] font-medium text-[#232321]/70 md:text-[10px]">
+                Show all (+)
+              </button>
+            </div>
+            <p className="text-[8px] leading-[1.45] text-[#70706e] md:text-[12px]">{product.description}</p>
+            <ul className="list-disc space-y-1 pl-4 text-[8px] leading-[1.45] text-[#70706e] md:text-[12px]">
+              {product.features.map((feature) => (
+                <li key={feature}>{feature}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-3 md:space-y-5">
+        <div className="flex items-center justify-between">
+          <h2
+            className="text-[26px] font-semibold leading-none text-[#232321] md:text-[42px]"
+            style={{ fontFamily: 'Rubik, sans-serif' }}
+          >
+            You may also like
+          </h2>
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              className="flex h-4 w-4 items-center justify-center rounded-[4px] bg-[#d4d4d3] text-[#232321] md:h-7 md:w-7"
+              aria-label="Previous products"
+            >
+              <KeyboardArrowLeftIcon sx={{ fontSize: { xs: 10, md: 20 } }} />
+            </button>
+            <button
+              type="button"
+              className="flex h-4 w-4 items-center justify-center rounded-[4px] bg-[#232321] text-white md:h-7 md:w-7"
+              aria-label="Next products"
+            >
+              <KeyboardArrowRightIcon sx={{ fontSize: { xs: 10, md: 20 } }} />
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-4">
+          {relatedProducts.map((item) => (
+            <ProductCard
+              key={item.id}
+              id={item.id}
+              title={item.title}
+              image={item.images[0]}
+              badge={item.badge}
+              badgeColor={item.badgeColor}
+              price={item.price}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default ProductDetailPage;

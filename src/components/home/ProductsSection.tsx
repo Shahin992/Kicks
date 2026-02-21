@@ -1,44 +1,6 @@
 import { CustomButton } from '@/components/common/CustomButton';
 import ProductCard from '@/components/common/ProductCard';
-
-type ProductItem = {
-  id: number;
-  title: string;
-  image: string;
-  badge: string;
-  badgeColor: '#4A69E2' | '#FFA52F';
-};
-
-const products: ProductItem[] = [
-  {
-    id: 1,
-    title: 'ADIDAS 4DFWD X PARLEY RUNNING SHOES',
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80',
-    badge: 'New',
-    badgeColor: '#4A69E2',
-  },
-  {
-    id: 2,
-    title: 'ADIDAS 4DFWD X PARLEY RUNNING SHOES',
-    image: 'https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?auto=format&fit=crop&w=800&q=80',
-    badge: '10% off',
-    badgeColor: '#FFA52F',
-  },
-  {
-    id: 3,
-    title: 'ADIDAS 4DFWD X PARLEY RUNNING SHOES',
-    image: 'https://images.unsplash.com/photo-1595341888016-a392ef81b7de?auto=format&fit=crop&w=800&q=80',
-    badge: 'New',
-    badgeColor: '#4A69E2',
-  },
-  {
-    id: 4,
-    title: 'ADIDAS 4DFWD X PARLEY RUNNING SHOES',
-    image: 'https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=800&q=80',
-    badge: 'New',
-    badgeColor: '#4A69E2',
-  },
-];
+import { products } from '@/constants/products';
 
 const ProductsSection = () => {
   return (
@@ -74,11 +36,12 @@ const ProductsSection = () => {
         {products.map((product) => (
           <ProductCard
             key={product.id}
+            id={product.id}
             title={product.title}
-            image={product.image}
+            image={product.images[0]}
             badge={product.badge}
             badgeColor={product.badgeColor}
-            price={125}
+            price={product.price}
           />
         ))}
       </div>
