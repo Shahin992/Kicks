@@ -10,13 +10,13 @@ const ProductsPage = () => {
   return (
     <section className="space-y-6 py-8 md:space-y-8 md:py-12">
       <h1
-        className="text-[32px] font-semibold uppercase leading-[1] text-[#232321] md:text-[74px] md:leading-[0.95]"
+        className="animate-fade-up text-[32px] font-semibold uppercase leading-[1] text-[#232321] md:text-[74px] md:leading-[0.95]"
         style={{ fontFamily: 'Rubik, sans-serif' }}
       >
         <span className="block">All New Drops</span>
       </h1>
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-5">
+      <div className="animate-fade-in grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-5">
         {isInitialLoading
           ? (
             <div className="col-span-2 md:col-span-4">

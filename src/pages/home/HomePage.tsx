@@ -5,7 +5,7 @@ import ReviewsSection from '@/components/home/ReviewsSection';
 
 const HomePage = () => {
   return (
-    <div className="py-8 md:py-12">
+    <div className="animate-fade-in py-8 md:py-12">
       <HeroSection />
       <ProductsSection />
       <CategoriesSection />

@@ -70,7 +70,7 @@ const CategoriesSection = () => {
             aria-label="Previous categories"
             onClick={handlePrevious}
             disabled={!canGoPrev}
-            className={`flex h-10 w-10 items-center justify-center rounded-[10px] md:h-10 md:w-10 ${
+            className={`flex h-10 w-10 items-center justify-center rounded-[10px] transition-all duration-200 md:h-10 md:w-10 ${
               canGoPrev ? 'bg-[#f1f1f1] text-[#222222]' : 'cursor-not-allowed bg-[#8d8d8d] text-[#5d5d5d]'
             }`}
           >
@@ -81,7 +81,7 @@ const CategoriesSection = () => {
             aria-label="Next categories"
             onClick={handleNext}
             disabled={!canGoNext}
-            className={`flex h-10 w-10 items-center justify-center rounded-[10px] md:h-10 md:w-10 ${
+            className={`flex h-10 w-10 items-center justify-center rounded-[10px] transition-all duration-200 md:h-10 md:w-10 ${
               canGoNext ? 'bg-[#f1f1f1] text-[#222222]' : 'cursor-not-allowed bg-[#8d8d8d] text-[#5d5d5d]'
             }`}
           >
@@ -111,8 +111,8 @@ const CategoriesSection = () => {
               )
               : visibleCategories.map((category, index) => (
           <article
-            key={category.id}
-            className={`relative flex min-h-[300px] flex-col bg-[#d4d6d9] p-4 pb-4 md:min-h-[600px] md:p-10 md:pb-8 ${
+            key={`${category.id}-${startIndex}`}
+            className={`animate-fade-up relative flex min-h-[300px] flex-col bg-[#d4d6d9] p-4 pb-4 md:min-h-[600px] md:p-10 md:pb-8 ${
               !isMobile && index === 0
                 ? 'rounded-t-[26px] border-b border-[#b8bcc1] md:rounded-none md:rounded-tl-[56px] md:border-b-0 md:border-r md:border-[#c7c9cd]'
                 : ''
@@ -122,7 +122,7 @@ const CategoriesSection = () => {
               <img
                 src={failedImageIds.includes(category.id) ? CATEGORY_FALLBACK_IMAGE : category.image}
                 alt={category.name}
-                className="h-full w-full object-contain"
+                className="h-full w-full object-contain transition-transform duration-300 hover:scale-[1.02]"
                 onError={() => {
                   setFailedImageIds((prev) => (prev.includes(category.id) ? prev : [...prev, category.id]));
                 }}
@@ -140,7 +140,7 @@ const CategoriesSection = () => {
               <button
                 type="button"
                 aria-label={`Open ${category.name}`}
-                className="mb-1 flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#232321] text-[#f3f3f3] md:mb-0 md:h-14 md:w-14 md:rounded-[10px]"
+                className="mb-1 flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#232321] text-[#f3f3f3] transition-transform duration-200 hover:-translate-y-0.5 md:mb-0 md:h-14 md:w-14 md:rounded-[10px]"
               >
                 <NorthEastIcon sx={{ fontSize: { xs: 18, md: 26 } }} />
               </button>

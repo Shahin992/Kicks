@@ -15,6 +15,7 @@ export const CustomButton = styled(Button, {
   fontSize: '15px',
   textTransform: 'capitalize',
   height:'40px',
+  transition: 'transform 180ms ease, box-shadow 200ms ease, opacity 180ms ease',
 
   '&.MuiButton-contained': {
     backgroundColor: `${customColor} !important`,
@@ -22,6 +23,8 @@ export const CustomButton = styled(Button, {
     '&:hover, &:focus, &:focus-visible': {
       backgroundColor: `${customColor} !important`,
       outline: "none",
+      transform: 'translateY(-1px)',
+      boxShadow: '0 10px 22px rgba(35, 35, 33, 0.2)',
     },
     '&.Mui-disabled': {
       backgroundColor: `rgba(0, 0, 0, 0.12) !important`,
@@ -36,7 +39,8 @@ export const CustomButton = styled(Button, {
     '&:hover, &:focus, &:focus-visible': {
       backgroundColor: `transparent !important`,
       borderColor: `${customColor} !important`,
-      outline: "none"
+      outline: "none",
+      transform: 'translateY(-1px)',
     },
     '&.Mui-disabled': {
       borderColor: `rgba(0, 0, 0, 0.26) !important`,

@@ -10,10 +10,12 @@ export const CustomIconButton = styled(IconButton, {
   shouldForwardProp: (prop) => prop !== 'customColor',
 })<CustomIconButtonProps>(({ customColor = '#346fef' }) => ({
   color: `${customColor} !important`,
+  transition: 'transform 180ms ease, opacity 180ms ease',
   '&:hover, &:focus, &:focus-visible': {
     backgroundColor: 'transparent !important',
     outline: 'none',
     boxShadow: 'none',
+    transform: 'translateY(-1px)',
   },
   '&.Mui-focusVisible': {
     outline: 'none',

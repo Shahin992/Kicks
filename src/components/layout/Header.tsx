@@ -14,33 +14,33 @@ const Header = () => {
 
   return (
     <header className="bg-[#cdcdcc] px-4 py-5 md:px-8 md:py-7">
-      <div className="mx-auto w-full max-w-[1220px] rounded-[18px] bg-[#f3f3f3] px-4 py-3 md:rounded-[24px] md:px-7 md:py-5">
+      <div className="animate-fade-in mx-auto w-full max-w-[1220px] rounded-[18px] bg-[#f3f3f3] px-4 py-3 md:rounded-[24px] md:px-7 md:py-5">
         <div className="relative hidden items-center justify-between md:flex">
           <nav className="flex items-center gap-10 text-base font-semibold text-[#232321]">
-            <Link to={ROUTES.products} className="flex items-center gap-1">
+            <Link to={ROUTES.products} className="flex items-center gap-1 transition-colors duration-200 hover:text-[#4A69E2]">
               <span>New Drops</span>
               <span className="text-sm leading-none">🔥</span>
             </Link>
-            <Link to={ROUTES.products} className="flex items-center">
+            <Link to={ROUTES.products} className="flex items-center transition-colors duration-200 hover:text-[#4A69E2]">
               <span>Men</span>
               <KeyboardArrowDownIcon sx={{ fontSize: 18 }} />
             </Link>
-            <Link to={ROUTES.products} className="flex items-center">
+            <Link to={ROUTES.products} className="flex items-center transition-colors duration-200 hover:text-[#4A69E2]">
               <span>Women</span>
               <KeyboardArrowDownIcon sx={{ fontSize: 18 }} />
             </Link>
           </nav>
 
-          <Link to={ROUTES.home} className="absolute left-1/2 -translate-x-1/2">
+          <Link to={ROUTES.home} className="absolute left-1/2 -translate-x-1/2 transition-transform duration-200 hover:scale-[1.03]">
             <TopbarLogo className="h-8 w-auto" />
           </Link>
 
           <div className="flex items-center gap-7 text-[#232321]">
-            <SearchIcon sx={{ fontSize: 30 }} />
-            <PersonIcon sx={{ fontSize: 30 }} />
+            <SearchIcon sx={{ fontSize: 30 }} className="cursor-pointer transition-transform duration-200 hover:-translate-y-0.5" />
+            <PersonIcon sx={{ fontSize: 30 }} className="cursor-pointer transition-transform duration-200 hover:-translate-y-0.5" />
             <Link
               to={ROUTES.cart}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ffa52f] text-sm font-semibold text-[#232321]"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ffa52f] text-sm font-semibold text-[#232321] transition-transform duration-200 hover:-translate-y-0.5"
             >
               {cartCount}
             </Link>

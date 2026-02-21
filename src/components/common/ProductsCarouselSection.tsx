@@ -87,7 +87,7 @@ const ProductsCarouselSection = ({
             type="button"
             onClick={handlePrevious}
             disabled={!canGoPrev}
-            className={`flex h-4 w-4 items-center justify-center rounded-[4px] md:h-7 md:w-7 ${
+            className={`flex h-4 w-4 items-center justify-center rounded-[4px] transition-all duration-200 md:h-7 md:w-7 ${
               canGoPrev ? 'bg-[#d4d4d3] text-[#232321]' : 'cursor-not-allowed bg-[#bdbdbc] text-[#7d7d7d]'
             }`}
             aria-label="Previous products"
@@ -98,7 +98,7 @@ const ProductsCarouselSection = ({
             type="button"
             onClick={handleNext}
             disabled={!canGoNext}
-            className={`flex h-4 w-4 items-center justify-center rounded-[4px] md:h-7 md:w-7 ${
+            className={`flex h-4 w-4 items-center justify-center rounded-[4px] transition-all duration-200 md:h-7 md:w-7 ${
               canGoNext ? 'bg-[#232321] text-white' : 'cursor-not-allowed bg-[#7d7d7d] text-[#bdbdbc]'
             }`}
             aria-label="Next products"
@@ -108,7 +108,7 @@ const ProductsCarouselSection = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-4">
+      <div className="animate-fade-in grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-4">
         {isLoading
           ? (
             <div className="col-span-2 md:col-span-4">

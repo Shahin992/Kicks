@@ -15,10 +15,10 @@ const ProductCard = ({ id, title, image, badge = 'New', badgeColor = '#4A69E2', 
   const detailPath = generatePath(ROUTES.productDetail, { id: String(id) });
 
   return (
-    <article className="flex h-full w-full flex-col gap-2 md:gap-3">
+    <article className="hover-lift animate-fade-up flex h-full w-full flex-col gap-2 md:gap-3">
       <Link
         to={detailPath}
-        className="block"
+        className="group block"
         aria-label={`View details for ${title}`}
       >
         <div className="relative h-[180px] w-full overflow-hidden rounded-[16px] border border-[#f1f1f1] bg-[#d8d9dd] p-2 md:h-[350px] md:rounded-[28px]">
@@ -30,14 +30,18 @@ const ProductCard = ({ id, title, image, badge = 'New', badgeColor = '#4A69E2', 
           </span>
 
           <div className="flex h-full w-full items-center justify-center">
-            <img src={image} alt={title} className="h-full w-full rounded-[14px] object-cover" />
+            <img
+              src={image}
+              alt={title}
+              className="h-full w-full rounded-[14px] object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+            />
           </div>
         </div>
       </Link>
 
       <Link
         to={detailPath}
-        className="block"
+        className="block transition-colors duration-200 hover:text-[#4A69E2]"
       >
         <h3
           className="h-[32px] overflow-hidden text-[16px] font-semibold uppercase leading-[1] tracking-normal text-[#232321] md:h-[48px] md:text-[24px] md:leading-[1]"

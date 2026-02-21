@@ -15,7 +15,7 @@ const ProductsSection = () => {
     <section className="space-y-5 py-6 md:space-y-8 md:py-10">
       <div className="flex items-end justify-between gap-4">
         <h2
-          className="text-[24px] font-semibold uppercase leading-[1] tracking-normal text-[#232321] md:text-[74px] md:font-semibold md:leading-[0.95] md:tracking-normal"
+          className="animate-fade-up text-[24px] font-semibold uppercase leading-[1] tracking-normal text-[#232321] md:text-[74px] md:font-semibold md:leading-[0.95] md:tracking-normal"
           style={{ fontFamily: 'Rubik, sans-serif' }}
         >
           <span className="block">Don&apos;t miss out</span>
@@ -42,7 +42,7 @@ const ProductsSection = () => {
         </CustomButton>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-5">
+      <div className="animate-fade-in grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-5">
         {isInitialLoading
           ? (
             <div className="col-span-2 md:col-span-4">
