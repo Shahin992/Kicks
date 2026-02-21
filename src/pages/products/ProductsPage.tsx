@@ -5,7 +5,7 @@ import { useProductsQueryState } from '@/features/products/productsApi';
 
 const ProductsPage = () => {
   const { data: products, isInitialLoading, hasError } = useProductsQueryState();
-  const isEmpty = !isInitialLoading && !hasError && products.length === 0;
+f  const isEmpty = !isInitialLoading && !hasError && products.length === 0;
 
   return (
     <section className="space-y-6 py-8 md:space-y-8 md:py-12">
