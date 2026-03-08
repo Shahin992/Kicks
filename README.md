@@ -1,3 +1,5 @@
+#Live URL: https://kicks-zavisoft.vercel.app
+
 # Kicks Frontend Task Setup
 
 React + Vite project scaffolded for the frontend task with:
